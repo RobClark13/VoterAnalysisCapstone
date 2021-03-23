@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace VoterAnalysis.Models
+{
+    public class PrecinctAssigned
+    {
+        [Key]
+        int Id { get; set; }
+        string Precinct { get; set; }
+        [ForeignKey("CampaignManager")]
+        public int CampaignManagerId { get; set; }
+        [ForeignKey("Staff")]
+        public int StaffId { get; set; }
+
+
+
+
+    }
+}
