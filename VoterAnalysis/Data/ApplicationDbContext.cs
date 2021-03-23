@@ -15,6 +15,9 @@ namespace VoterAnalysis.Data
         {
         }
         public DbSet<CampaignManager> CampaignManagers { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
+        public DbSet<PrecinctAssigned> PrecinctsAssigned { get; set; }
+        public DbSet<Volunteer> Volunteers { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

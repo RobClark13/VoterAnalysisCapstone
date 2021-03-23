@@ -10,8 +10,8 @@ namespace VoterAnalysis.Models
     public class PrecinctAssigned
     {
         [Key]
-        int Id { get; set; }
-        string Precinct { get; set; }
+        public int Id { get; set; }
+        public string Precinct { get; set; }
         [ForeignKey("CampaignManager")]
         public int CampaignManagerId { get; set; }
         [ForeignKey("Staff")]

@@ -7,5 +7,6 @@ namespace VoterAnalysis.Models
 {
     public class Voter
     {
+		
     }
 }

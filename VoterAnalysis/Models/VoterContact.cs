@@ -9,9 +9,9 @@ namespace VoterAnalysis.Models
     public class VoterContact
     {
         [Key]
-        int Id { get; set; }
-        string TypeOfContact { get; set; }
-        bool MadeContact { get; set; }
-        int ContactScore { get; set; }
+        public int Id { get; set; }
+        public string TypeOfContact { get; set; }
+        public bool MadeContact { get; set; }
+        public int ContactScore { get; set; }
     }
 }
