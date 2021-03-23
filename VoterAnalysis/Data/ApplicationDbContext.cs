@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VoterAnalysis.Models;
 
 namespace VoterAnalysis.Data
 {
@@ -13,6 +14,7 @@ namespace VoterAnalysis.Data
             : base(options)
         {
         }
+        public DbSet<CampaignManager> CampaignManagers { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

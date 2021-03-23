@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VoterAnalysis.Data;
 
 namespace VoterAnalysis.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210322224540_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace VoterAnalysis.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2d6cd0d2-5d3d-4119-9a1e-8f97650fbe34",
-                            ConcurrencyStamp = "1fa1b88a-4492-4f23-858f-c2ba267c3a8e",
+                            Id = "c01bac99-46a3-48be-9473-5bad99e8e674",
+                            ConcurrencyStamp = "caaf6aed-b0d5-483e-935e-a66f2b6b6d77",
                             Name = "CampaignManager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "31eb22ec-46ff-4b37-b727-fee8f1edec6d",
-                            ConcurrencyStamp = "eb45a823-99e3-48c0-9779-576cf4b3450b",
+                            Id = "93300f84-85b3-44c3-b34a-19e6dff86367",
+                            ConcurrencyStamp = "361f75c6-f88b-4d39-8e1e-80b9fcd048ea",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "1cecafa1-0d19-4bb7-acb0-9f2eeed00f35",
-                            ConcurrencyStamp = "ab97c600-f8f5-4bfe-8cd9-cc3b845552d4",
+                            Id = "81154103-5909-407a-b410-d5d17c9909ad",
+                            ConcurrencyStamp = "e5ceed6f-5657-4e27-b0c4-c51305ffd978",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
