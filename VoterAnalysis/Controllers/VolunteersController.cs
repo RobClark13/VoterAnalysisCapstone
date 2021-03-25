@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -58,6 +59,8 @@ namespace VoterAnalysis.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                volunteer.IdentityUserID = userID;
                 _context.Add(volunteer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -148,6 +151,12 @@ namespace VoterAnalysis.Controllers
         private bool VolunteerExists(int id)
         {
             return _context.Volunteers.Any(e => e.Id == id);
+        }
+
+        public IActionResult SeeVotersED()
+        {
+            var voters = _context.Voters;
+            return View(voters);
         }
     }
 }

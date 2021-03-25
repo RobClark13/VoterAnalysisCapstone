@@ -59,6 +59,8 @@ namespace VoterAnalysis.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                campaignManager.IdentityUserID = userID;
                 _context.Add(campaignManager);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

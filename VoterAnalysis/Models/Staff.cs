@@ -12,10 +12,10 @@ namespace VoterAnalysis.Models
     {
         [Key]
         public int Id { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        string PhoneNumber { get; set; }
-        string EmailAddress { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string EmailAddress { get; set; }
         [ForeignKey("IdentityUser")]
         public string IdentityUserID { get; set; }
         public IdentityUser IdentityUser { get; set; }
