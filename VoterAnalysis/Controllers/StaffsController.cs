@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -148,6 +149,21 @@ namespace VoterAnalysis.Controllers
         private bool StaffExists(int id)
         {
             return _context.Staffs.Any(e => e.Id == id);
+        }
+
+        public ActionResult SeePrecinctsAssigned()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var staff = _context.Staffs.Where(c => c.IdentityUserID == userId).FirstOrDefault();
+            var precincts = _context.PrecinctsAssigned.Where(p => p.StaffId == staff.Id);
+            
+            return View(precincts);
+        }
+        public ActionResult SeeVotersFromPrecinct(int id)
+        {
+            var precinct = _context.PrecinctsAssigned.Find(id);
+            var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
+            return View(voters);
         }
     }
 }

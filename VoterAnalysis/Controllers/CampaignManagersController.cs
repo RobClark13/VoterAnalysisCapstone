@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -149,5 +150,53 @@ namespace VoterAnalysis.Controllers
         {
             return _context.CampaignManagers.Any(e => e.Id == id);
         }
+        // Get: CampaignManagers/
+        public  ActionResult AssignVoterScore(string searchString)
+        {
+            var voters = _context.Voters.Where(c => c.ResidentialState == "OH");
+         
+            return View(voters);
+        }
+
+        public void VoterScoreFormula(string precinct)
+        {
+            var votersPrecinct = _context.Voters.Where(v => v.PrecinctName == precinct);
+            foreach(Voter voter in votersPrecinct)
+            {
+                if (voter.General2010 == "X")
+                {
+                    voter.VoterScore++;
+                }
+            }
+        }
+
+        public IActionResult ViewListOfStaff()
+        {
+            var staff = _context.Staffs;
+            return View(staff);
+        }
+     
+        public IActionResult AssignStaffPrecinct(int id)
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AssignStaffPrecinct(PrecinctAssigned precinctAssigned)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cammgr = _context.CampaignManagers.Where(contr0 => contr0.IdentityUserID ==
+            userId).FirstOrDefault();
+            if (ModelState.IsValid)
+            {
+                precinctAssigned.CampaignManagerId = cammgr.Id;
+                precinctAssigned.StaffId = cammgr.Id;
+                precinctAssigned.Precinct = "Love";
+                _context.Add(precinctAssigned);
+                _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+           
     }
 }
