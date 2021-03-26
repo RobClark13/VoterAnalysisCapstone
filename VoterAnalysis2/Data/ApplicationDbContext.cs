@@ -20,7 +20,7 @@ namespace VoterAnalysis2.Data
         public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<ElectionDayVote> ElectionDayVotes { get; set; }
         public DbSet<Voter> Voters { get; set; }
-        public DbSet<VoterContact> VoterContacts { get; set; }
+        public DbSet<VoterId> VoterContacts { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

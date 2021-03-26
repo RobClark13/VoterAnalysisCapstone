@@ -171,5 +171,6 @@ namespace VoterAnalysis2.Controllers
             var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
             return View(voters);
         }
+        
     }
 }

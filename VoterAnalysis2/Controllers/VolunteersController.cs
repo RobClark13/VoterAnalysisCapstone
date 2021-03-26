@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -65,7 +66,7 @@ namespace VoterAnalysis2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserId);
             return View(volunteer);
         }
 
@@ -82,7 +83,7 @@ namespace VoterAnalysis2.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserId);
             return View(volunteer);
         }
 
@@ -118,7 +119,7 @@ namespace VoterAnalysis2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", volunteer.IdentityUserId);
             return View(volunteer);
         }
 
@@ -160,6 +161,22 @@ namespace VoterAnalysis2.Controllers
         {
             var voters = _context.Voters;
             return View(voters);
+        }
+        public async Task<IActionResult> CheckOffVoter(int id, ElectionDayVote electionDayVote)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var vol = _context.Volunteers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
+            var voter = _context.Voters.Where(v => v.Id == id).FirstOrDefault();
+            if (ModelState.IsValid)
+
+            {
+                electionDayVote.HasVoted = true;
+                electionDayVote.VolunteerId = vol.Id;
+                electionDayVote.VoterId = voter.Id;
+                var voted=_context.Add(electionDayVote);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

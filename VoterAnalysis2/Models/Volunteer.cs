@@ -15,7 +15,7 @@ namespace VoterAnalysis2.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [ForeignKey("IdentityUser")]
-        public string IdentityUserID { get; set; }
+        public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
     }
 }
