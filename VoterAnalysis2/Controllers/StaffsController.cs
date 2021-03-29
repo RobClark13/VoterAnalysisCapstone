@@ -171,6 +171,30 @@ namespace VoterAnalysis2.Controllers
             var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
             return View(voters);
         }
+        //public ActionResult VoterIdSurvey(int id)
+        //{
+        //    var voter = _context.Voters.Find(id);
+        //    if (voter.VoterScore >= 5)
+        //    {
+        //        return View("VoterIdGood");
+        //    } 
+        //    else
+        //    {
+        //        return View("VoterIdNeutral");
+        //    }
+        //}
+        //public ActionResult VoterStanceSurvey(int id)
+        //{
+        //    var voter = _context.Voters.Find(id);
+        //    if (voter.VoterScore >= 7)
+        //    {
+        //        return View("VoterStanceGood");
+        //    }
+        //    else
+        //    {
+        //        return View("VoterStanceNeutral");
+        //    }
+        //}
         
     }
 }

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VoterAnalysis2.Data;
 
-namespace VoterAnalysis2.Data.Migrations
+namespace VoterAnalysis2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210325175401_cmAdded")]
-    partial class cmAdded
+    [Migration("20210329145347_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace VoterAnalysis2.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ac8d249b-6065-4b88-a594-5853f6eb345a",
-                            ConcurrencyStamp = "e910cf50-6f31-4419-964b-669c5caeaf97",
+                            Id = "a5e57dd4-56b9-4926-9ff1-c2ebb152a5dc",
+                            ConcurrencyStamp = "68ed69d5-0829-4772-9ada-fc3ac7bffb47",
                             Name = "Campaign Manager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "bc95aa4d-7e57-4daa-8355-aa8f53548bf2",
-                            ConcurrencyStamp = "0fba68d8-4f08-492f-a57f-7e342aa99459",
+                            Id = "35072806-be18-449f-b9c7-e140dc500e14",
+                            ConcurrencyStamp = "f740c18f-2068-48dc-b5a3-bb181f1e61da",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "967e01a1-8447-47b8-afdc-e80c14595180",
-                            ConcurrencyStamp = "8a801e6b-decf-4209-b430-8be646b9e8e4",
+                            Id = "314ddca1-5243-4766-856c-de837c470f6e",
+                            ConcurrencyStamp = "3b0eeca6-2d70-4afd-8cb1-144e149671b9",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
@@ -266,7 +266,227 @@ namespace VoterAnalysis2.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("CampaignManager");
+                    b.ToTable("CampaignManagers");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.PrecinctAssigned", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CampaignManagerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Precinct")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampaignManagerId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("PrecinctsAssigned");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.Staff", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmailAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserID");
+
+                    b.ToTable("Staffs");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.Volunteer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Volunteers");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.Voter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DateOfBirth")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2010")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2012")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2014")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2016")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2018")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("General2020")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PartyAffliation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrecinctCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrecinctName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2010")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2012")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2014")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2016")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2018")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary2020")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResidentialAddress1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResidentialCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResidentialSecondaryAddr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResidentialState")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResidentialZip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Suffix")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VoterStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Voters");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.VoterId", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ContactScore")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DirectionOfCountry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DirectionOfSelf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("MadeContact")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PartyStance")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VoteIn2020")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VoterContacts");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.VoterScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VoterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VoterId");
+
+                    b.ToTable("VoterScores");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,6 +545,44 @@ namespace VoterAnalysis2.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.PrecinctAssigned", b =>
+                {
+                    b.HasOne("VoterAnalysis2.Models.CampaignManager", "campaignManager")
+                        .WithMany()
+                        .HasForeignKey("CampaignManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VoterAnalysis2.Models.Staff", "staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.Staff", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserID");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.Volunteer", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.VoterScore", b =>
+                {
+                    b.HasOne("VoterAnalysis2.Models.Voter", "Voter")
+                        .WithMany()
+                        .HasForeignKey("VoterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

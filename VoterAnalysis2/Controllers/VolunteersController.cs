@@ -162,21 +162,21 @@ namespace VoterAnalysis2.Controllers
             var voters = _context.Voters;
             return View(voters);
         }
-        public async Task<IActionResult> CheckOffVoter(int id, ElectionDayVote electionDayVote)
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var vol = _context.Volunteers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var voter = _context.Voters.Where(v => v.Id == id).FirstOrDefault();
-            if (ModelState.IsValid)
+        //public async Task<IActionResult> CheckOffVoter(int id, ElectionDayVote electionDayVote)
+        //{
+        //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var vol = _context.Volunteers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
+        //    var voter = _context.Voters.Where(v => v.Id == id).FirstOrDefault();
+        //    if (ModelState.IsValid)
 
-            {
-                electionDayVote.HasVoted = true;
-                electionDayVote.VolunteerId = vol.Id;
-                electionDayVote.VoterId = voter.Id;
-                var voted=_context.Add(electionDayVote);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
+        //    {
+        //        electionDayVote.HasVoted = true;
+        //        electionDayVote.VolunteerId = vol.Id;
+        //        electionDayVote.VoterId = voter.Id;
+        //        var voted=_context.Add(electionDayVote);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction(nameof(Index));
+        //}
     }
 }

@@ -14,7 +14,9 @@ namespace VoterAnalysis2.Models
         public string Precinct { get; set; }
         [ForeignKey("CampaignManager")]
         public int CampaignManagerId { get; set; }
+        public CampaignManager campaignManager { get; set; }
         [ForeignKey("Staff")]
         public int StaffId { get; set; }
+        public Staff staff { get; set; }
     }
 }

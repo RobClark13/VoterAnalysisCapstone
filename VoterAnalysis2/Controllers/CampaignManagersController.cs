@@ -166,18 +166,53 @@ namespace VoterAnalysis2.Controllers
 
             return View(voters);
         }
-
-        public void VoterScoreFormula(string precinct)
+        public IActionResult CreateVoterScore()
         {
-            var votersPrecinct = _context.Voters.Where(v => v.PrecinctName == precinct);
-            foreach (Voter voter in votersPrecinct)
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateVoterScore(VoterScore voterscore)
+        {
+            var voters = _context.Voters.Where(v => v.ResidentialState== "OH");
+            foreach (Voter voter in voters)
             {
-                if (voter.General2010 == "X")
+                if (ModelState.IsValid)
                 {
-                    voter.VoterScore++;
+                    voterscore.VoterId = voter.Id;
+                    if (voter.General2020 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    if (voter.General2018 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    if (voter.General2016 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    if (voter.General2014 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    if (voter.General2012 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    if (voter.General2010 == "X")
+                    {
+                        voterscore.Score++;
+                    }
+                    _context.Add(voterscore);
+                    voterscore = new VoterScore();
                 }
             }
+            await _context.SaveChangesAsync();
+            return View("Index");
         }
+
+
 
         public IActionResult ViewListOfStaff()
         {
@@ -187,10 +222,11 @@ namespace VoterAnalysis2.Controllers
 
         public IActionResult AssignStaffPrecinct(int id)
         {
-            return View();
+            var staff = _context.Staffs.Find(id);
+            return View(staff);
         }
         [HttpPost]
-        public IActionResult AssignStaffPrecinct(PrecinctAssigned precinctAssigned)
+        public IActionResult AssignStaffPrecinct(PrecinctAssigned precinctAssigned, Staff staff)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var cammgr = _context.CampaignManagers.Where(c => c.IdentityUserId ==
@@ -198,13 +234,42 @@ namespace VoterAnalysis2.Controllers
             if (ModelState.IsValid)
             {
                 precinctAssigned.CampaignManagerId = cammgr.Id;
-                precinctAssigned.StaffId = cammgr.Id;
+                precinctAssigned.StaffId = staff.Id;
                 precinctAssigned.Precinct = "Love";
                 _context.Add(precinctAssigned);
                 _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View();
+        }
+        public ActionResult SeeLikelyVotersChart()
+        {
+            var xlabels = new List<string>();
+            var ylabels = new List<int>();
+            var likelyvoters = from v in _context.VoterScores
+                               join d in _context.Voters on v.VoterId equals d.Id
+                               select new
+                               {
+                                   VoterScore = v.Score,
+                                   VoterPrecinct = d.PrecinctName
+                               };
+            foreach (var data in likelyvoters)
+            {
+                if (data.VoterScore >= 5)
+                {
+                    if (xlabels.Contains(data.VoterPrecinct))
+                    {
+                        int indexOfPrecinct = xlabels.IndexOf(data.VoterPrecinct);
+                        ylabels[indexOfPrecinct]++;
+                    }
+                    else
+                    {
+                        xlabels.Add(data.VoterPrecinct);
+                        ylabels.Add(1);
+                    }
+                }
+            }
+            
         }
 
 

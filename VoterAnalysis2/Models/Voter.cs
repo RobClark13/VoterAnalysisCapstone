@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,12 +8,12 @@ namespace VoterAnalysis2.Models
 {
     public class Voter
     {
+		[Key]
 		public int Id { get; set; }
-		public int VoterScore { get; set; }
+		
 		public string LastName { get; set; }
 		public string FirstName { get; set; }
-		public string MiddleName { get; set; }
-		public string Suffic { get; set; }
+		public string Suffix { get; set; }
 		public string DateOfBirth { get; set; }
 		public string VoterStatus { get; set; }
 		public string PartyAffliation { get; set; }
