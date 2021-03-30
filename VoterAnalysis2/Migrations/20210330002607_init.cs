@@ -47,22 +47,17 @@ namespace VoterAnalysis2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VoterContacts",
+                name: "PrecinctsAssigned",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeOfContact = table.Column<string>(nullable: true),
-                    MadeContact = table.Column<bool>(nullable: false),
-                    ContactScore = table.Column<int>(nullable: false),
-                    VoteIn2020 = table.Column<int>(nullable: false),
-                    PartyStance = table.Column<string>(nullable: true),
-                    DirectionOfCountry = table.Column<string>(nullable: true),
-                    DirectionOfSelf = table.Column<string>(nullable: true)
+                    Precinct = table.Column<string>(nullable: true),
+                    StaffName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VoterContacts", x => x.Id);
+                    table.PrimaryKey("PK_PrecinctsAssigned", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -277,6 +272,40 @@ namespace VoterAnalysis2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VoterIds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateContacted = table.Column<DateTime>(nullable: false),
+                    TypeOfContact = table.Column<string>(nullable: true),
+                    MadeContact = table.Column<bool>(nullable: false),
+                    ContactScore = table.Column<int>(nullable: false),
+                    VoteIn2020 = table.Column<int>(nullable: false),
+                    PartyStance = table.Column<string>(nullable: true),
+                    DirectionOfCountry = table.Column<string>(nullable: true),
+                    DirectionOfSelf = table.Column<string>(nullable: true),
+                    VoterId = table.Column<int>(nullable: true),
+                    StaffId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VoterIds", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VoterIds_Voters_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Voters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VoterIds_Voters_VoterId",
+                        column: x => x.VoterId,
+                        principalTable: "Voters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VoterScores",
                 columns: table => new
                 {
@@ -297,46 +326,79 @@ namespace VoterAnalysis2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrecinctsAssigned",
+                name: "VoterStances",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Precinct = table.Column<string>(nullable: true),
-                    CampaignManagerId = table.Column<int>(nullable: false),
-                    StaffId = table.Column<int>(nullable: false)
+                    DateContacted = table.Column<DateTime>(nullable: false),
+                    TypeOfContact = table.Column<string>(nullable: true),
+                    MadeContact = table.Column<bool>(nullable: false),
+                    ContactScore = table.Column<int>(nullable: false),
+                    CandidateStance = table.Column<string>(nullable: true),
+                    PlanToVote = table.Column<string>(nullable: true),
+                    SecondaryCandidateStance = table.Column<string>(nullable: true),
+                    VoterId = table.Column<int>(nullable: true),
+                    StaffId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrecinctsAssigned", x => x.Id);
+                    table.PrimaryKey("PK_VoterStances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrecinctsAssigned_CampaignManagers_CampaignManagerId",
-                        column: x => x.CampaignManagerId,
-                        principalTable: "CampaignManagers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PrecinctsAssigned_Staffs_StaffId",
+                        name: "FK_VoterStances_Voters_StaffId",
                         column: x => x.StaffId,
-                        principalTable: "Staffs",
+                        principalTable: "Voters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VoterStances_Voters_VoterId",
+                        column: x => x.VoterId,
+                        principalTable: "Voters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ElectionDayVotes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HasVoted = table.Column<bool>(nullable: false),
+                    VoterId = table.Column<int>(nullable: true),
+                    VolunteerId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ElectionDayVotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ElectionDayVotes_Volunteers_VolunteerId",
+                        column: x => x.VolunteerId,
+                        principalTable: "Volunteers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ElectionDayVotes_Voters_VoterId",
+                        column: x => x.VoterId,
+                        principalTable: "Voters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a5e57dd4-56b9-4926-9ff1-c2ebb152a5dc", "68ed69d5-0829-4772-9ada-fc3ac7bffb47", "Campaign Manager", "CAMPAIGNMANAGER" });
+                values: new object[] { "519490d3-e5f4-4570-8853-8bde6672e68e", "b7806123-0943-4b2f-93d9-aa7d07db2854", "Campaign Manager", "CAMPAIGNMANAGER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "35072806-be18-449f-b9c7-e140dc500e14", "f740c18f-2068-48dc-b5a3-bb181f1e61da", "Staff", "STAFF" });
+                values: new object[] { "900a60a3-4645-4f02-a9d0-3b66eb5843e2", "c7529fee-e4a7-4254-85eb-2eef1cb6919d", "Staff", "STAFF" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "314ddca1-5243-4766-856c-de837c470f6e", "3b0eeca6-2d70-4afd-8cb1-144e149671b9", "Volunteer", "VOLUNTEER" });
+                values: new object[] { "204b61fb-9964-473d-ac24-dbc54f8c2d39", "ac98f07f-7cc7-49cd-92e6-ad16f7ad6a6b", "Volunteer", "VOLUNTEER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -383,14 +445,14 @@ namespace VoterAnalysis2.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrecinctsAssigned_CampaignManagerId",
-                table: "PrecinctsAssigned",
-                column: "CampaignManagerId");
+                name: "IX_ElectionDayVotes_VolunteerId",
+                table: "ElectionDayVotes",
+                column: "VolunteerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrecinctsAssigned_StaffId",
-                table: "PrecinctsAssigned",
-                column: "StaffId");
+                name: "IX_ElectionDayVotes_VoterId",
+                table: "ElectionDayVotes",
+                column: "VoterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Staffs_IdentityUserID",
@@ -403,8 +465,28 @@ namespace VoterAnalysis2.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VoterIds_StaffId",
+                table: "VoterIds",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoterIds_VoterId",
+                table: "VoterIds",
+                column: "VoterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VoterScores_VoterId",
                 table: "VoterScores",
+                column: "VoterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoterStances_StaffId",
+                table: "VoterStances",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoterStances_VoterId",
+                table: "VoterStances",
                 column: "VoterId");
         }
 
@@ -426,25 +508,31 @@ namespace VoterAnalysis2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CampaignManagers");
+
+            migrationBuilder.DropTable(
+                name: "ElectionDayVotes");
+
+            migrationBuilder.DropTable(
                 name: "PrecinctsAssigned");
 
             migrationBuilder.DropTable(
-                name: "Volunteers");
+                name: "Staffs");
 
             migrationBuilder.DropTable(
-                name: "VoterContacts");
+                name: "VoterIds");
 
             migrationBuilder.DropTable(
                 name: "VoterScores");
 
             migrationBuilder.DropTable(
+                name: "VoterStances");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "CampaignManagers");
-
-            migrationBuilder.DropTable(
-                name: "Staffs");
+                name: "Volunteers");
 
             migrationBuilder.DropTable(
                 name: "Voters");

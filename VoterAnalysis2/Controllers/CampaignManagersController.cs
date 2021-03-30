@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using VoterAnalysis2.Data;
 using VoterAnalysis2.Models;
 
@@ -159,13 +161,6 @@ namespace VoterAnalysis2.Controllers
         {
             return _context.CampaignManagers.Any(e => e.Id == id);
         }
-
-        public ActionResult AssignVoterScore(string searchString)
-        {
-            var voters = _context.Voters.Where(c => c.ResidentialState == "OH");
-
-            return View(voters);
-        }
         public IActionResult CreateVoterScore()
         {
             return View();
@@ -174,7 +169,7 @@ namespace VoterAnalysis2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateVoterScore(VoterScore voterscore)
         {
-            var voters = _context.Voters.Where(v => v.ResidentialState== "OH");
+            var voters = _context.Voters.Where(v => v.ResidentialState == "OH");
             foreach (Voter voter in voters)
             {
                 if (ModelState.IsValid)
@@ -211,38 +206,28 @@ namespace VoterAnalysis2.Controllers
             await _context.SaveChangesAsync();
             return View("Index");
         }
-
-
-
-        public IActionResult ViewListOfStaff()
+        public ActionResult ViewListOfStaff()
         {
-            var staff = _context.Staffs;
-            return View(staff);
+           var staffList= _context.Staffs;
+            return View(staffList);
         }
-
-        public IActionResult AssignStaffPrecinct(int id)
+        public IActionResult AssignStaffPrecinct()
         {
-            var staff = _context.Staffs.Find(id);
-            return View(staff);
+            ViewBag.Precinct = new SelectList(_context.Voters, "PrecinctName", "PrecinctName");
+            
+             return View();
         }
         [HttpPost]
-        public IActionResult AssignStaffPrecinct(PrecinctAssigned precinctAssigned, Staff staff)
+        public async Task<IActionResult> AssignStaffPrecinct( PrecinctAssigned precinctAssigned)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var cammgr = _context.CampaignManagers.Where(c => c.IdentityUserId ==
-            userId).FirstOrDefault();
-            if (ModelState.IsValid)
-            {
-                precinctAssigned.CampaignManagerId = cammgr.Id;
-                precinctAssigned.StaffId = staff.Id;
-                precinctAssigned.Precinct = "Love";
+            
                 _context.Add(precinctAssigned);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View();
+            
         }
-        public ActionResult SeeLikelyVotersChart()
+
+        public ActionResult ViewLikelyVoters()
         {
             var xlabels = new List<string>();
             var ylabels = new List<int>();
@@ -269,9 +254,100 @@ namespace VoterAnalysis2.Controllers
                     }
                 }
             }
-            
+            ViewBag.xlabels = new HtmlString(JsonConvert.SerializeObject(xlabels));
+            ViewBag.ylabels = new HtmlString(JsonConvert.SerializeObject(ylabels));
+            return View();
         }
+        public ActionResult ViewVotersContactedByDay()
+        {
+            var xlabels = new List<string>();
+            var ylabels = new List<int>();
+            var voterID = _context.VoterIds;
+            var voterStance = _context.VoterStances;
+            foreach (var data in voterID)
+            {
+                if (data.MadeContact == true)
+                {
+                    if (xlabels.Contains(data.TypeOfContact))
+                    {
+                        int indexOfPrecinct = xlabels.IndexOf(data.TypeOfContact);
+                        ylabels[indexOfPrecinct]++;
+                    }
+                    else
+                    {
+                        xlabels.Add(data.TypeOfContact);
+                        ylabels.Add(1);
+                    }
+                }
+            }
+            foreach (var data in voterStance)
+            {
+                if (data.MadeContact == true)
+                {
+                    if (xlabels.Contains(data.TypeOfContact))
+                    {
+                        int indexOfPrecinct = xlabels.IndexOf(data.TypeOfContact);
+                        ylabels[indexOfPrecinct]++;
+                    }
+                    else
+                    {
+                        xlabels.Add(data.TypeOfContact);
+                        ylabels.Add(1);
+                    }
+                }
+            }
+            ViewBag.xlabels = new HtmlString(JsonConvert.SerializeObject(xlabels));
+            ViewBag.ylabels = new HtmlString(JsonConvert.SerializeObject(ylabels));
+            return View();
+        }
+        public ActionResult ViewVotersElectionDay()
+        {
+            var xlabel = "Has Voted";
+            var ylabel = 0;
+            var likelyvoters = _context.ElectionDayVotes;
 
+            foreach (var data in likelyvoters)
+            {
+                if (data.HasVoted == true)
+                {
+                    ylabel++;
+                }
+            }
+            ViewBag.xlabel = new HtmlString(JsonConvert.SerializeObject(xlabel));
+            ViewBag.ylabel = new HtmlString(JsonConvert.SerializeObject(ylabel));
+            return View();
+        }
+        public ActionResult ViewStaffContact()
+        {
+            var xlabels = new List<string>();
+            var ylabels = new List<int>();
+            var staffContact = from v in _context.Staffs
+                               join d in _context.VoterIds on v.Id equals d.StaffId
+                               select new
+                               {
+                                   StaffName = v.FirstName + " " + v.LastName,
+                                   StaffContact = d.StaffId
+                               };
+            foreach (var data in staffContact)
+            {
 
+                if (xlabels.Contains(data.StaffName))
+                {
+                    int indexOfPrecinct = xlabels.IndexOf(data.StaffName);
+                    ylabels[indexOfPrecinct]++;
+
+                    {
+                        xlabels.Add(data.StaffName);
+                        ylabels.Add(1);
+                    }
+
+                }
+                
+            }
+            ViewBag.xlabels = new HtmlString(JsonConvert.SerializeObject(xlabels));
+            ViewBag.ylabels = new HtmlString(JsonConvert.SerializeObject(ylabels));
+            return View();
+        }
     }
 }
+
