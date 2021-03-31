@@ -24,6 +24,7 @@ namespace VoterAnalysis2.Data
         public DbSet<VoterScore> VoterScores { get; set; }
         public DbSet<VoterStanceSurvey> VoterStances { get; set; }
         public DbSet<ElectionDayVote> ElectionDayVotes { get; set; }
+        public DbSet<ElectionDayAssignment> ElectionDayAssignments { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

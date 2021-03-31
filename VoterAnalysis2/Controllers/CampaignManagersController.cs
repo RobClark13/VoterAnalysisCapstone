@@ -218,15 +218,24 @@ namespace VoterAnalysis2.Controllers
              return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AssignStaffPrecinct( PrecinctAssigned precinctAssigned)
+        public async Task<IActionResult> AssignStaffPrecinct(PrecinctAssigned precinctAssigned)
         {
-            
                 _context.Add(precinctAssigned);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            
         }
-
+        public IActionResult AssignStaffElectionDay()
+        {
+            ViewBag.Precinct = new SelectList(_context.Voters, "PrecinctName", "PrecinctName");
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AssignStaffElectionDay(ElectionDayAssignment electionDayAssignment)
+        {
+            _context.Add(electionDayAssignment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public ActionResult ViewLikelyVoters()
         {
             var xlabels = new List<string>();

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VoterAnalysis2.Data;
 
 namespace VoterAnalysis2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210330131532_addedfieldtoprecinctassignment")]
+    partial class addedfieldtoprecinctassignment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace VoterAnalysis2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "30684273-4e69-4ccd-8b2d-5ec07c079502",
-                            ConcurrencyStamp = "db3a34ca-e488-421a-a12a-40574f989af6",
+                            Id = "dadcd1f8-911a-46a9-b2b5-98ccd7c554bc",
+                            ConcurrencyStamp = "98b14edf-4e6e-4d54-aa20-ecc9cf822dae",
                             Name = "Campaign Manager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "465765df-5843-4ab7-bd68-686e42682989",
-                            ConcurrencyStamp = "4ebe6c23-c8f8-4d65-8ec6-adae7d7f2beb",
+                            Id = "199c618a-6c2f-4d53-b62f-ad58f70d81a7",
+                            ConcurrencyStamp = "27b9f442-ec1b-4193-b9b2-3b746c70f83e",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "ac6f1ea1-ee73-42df-803f-ffe8a47a6b6a",
-                            ConcurrencyStamp = "f9fef248-54eb-4850-a1a0-922ec30c3094",
+                            Id = "e03341f5-70e2-4883-baea-0a686bcd9059",
+                            ConcurrencyStamp = "84cd41d1-ac61-485a-954e-a9de165338bd",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
@@ -265,29 +267,6 @@ namespace VoterAnalysis2.Migrations
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("CampaignManagers");
-                });
-
-            modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayAssignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("ElectionDay")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Precinct")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StaffId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StaffId");
-
-                    b.ToTable("ElectionDayAssignments");
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayVote", b =>
@@ -643,13 +622,6 @@ namespace VoterAnalysis2.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
-                });
-
-            modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayAssignment", b =>
-                {
-                    b.HasOne("VoterAnalysis2.Models.Voter", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffId");
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayVote", b =>

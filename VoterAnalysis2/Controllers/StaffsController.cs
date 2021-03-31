@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using VoterAnalysis2.Data;
 using VoterAnalysis2.Models;
 
@@ -159,8 +160,6 @@ namespace VoterAnalysis2.Controllers
         }
         public ActionResult SeePrecinctsAssigned()
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var staff = _context.Staffs.Where(c => c.IdentityUserID == userId).FirstOrDefault();
             var precincts = _context.PrecinctsAssigned;
 
             return View(precincts);
@@ -171,12 +170,44 @@ namespace VoterAnalysis2.Controllers
             var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
             return View(voters);
         }
+        public ActionResult SeeElectionDayAssigned()
+        {
+            var precincts = _context.ElectionDayAssignments;
+            return View(precincts);
+        }
+        public ActionResult SeeVotersElectionDay(int id)
+        {
+            var precinct = _context.PrecinctsAssigned.Find(id);
+            var precinctvoters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
+            var voters = _context.ElectionDayVotes.Where(v => v.HasVoted == false);
+
+            return View(voters);
+
+        }
         public ActionResult VoterIdSurvey(int id)
         {
             var voter = _context.VoterScores.Where(v=>v.Score>=5);
             return View(voter);
         }
-       
+       public void SendEmail()
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Joey", "clarkrob13@gmail.com"));
+            message.To.Add(new MailboxAddress("Alice", "clarkrob13@gmail.com"));
+            message.Subject = "How you doin?";
+            message.Body = new TextPart("plain")
+            {
+                Text = @"Hey Alice,
+
+                What are you up to this weekend? Monica is throwing one of her parties on
+                Saturday and I was hoping you could make it.
+
+                Will you be my +1?
+
+                -- Joey
+                "
+            };
+        }
 
     }
 }
