@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -192,7 +194,7 @@ namespace VoterAnalysis2.Controllers
        public void SendEmail()
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Joey", "clarkrob13@gmail.com"));
+            message.From.Add(new MailboxAddress("Joey", APIKeys.OutlookAcct));
             message.To.Add(new MailboxAddress("Alice", "clarkrob13@gmail.com"));
             message.Subject = "How you doin?";
             message.Body = new TextPart("plain")
@@ -207,7 +209,18 @@ namespace VoterAnalysis2.Controllers
                 -- Joey
                 "
             };
+            using (var smtp = new MailKit.Net.Smtp.SmtpClient())
+            {
+                smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                smtp.Connect("smtp.office365.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Authenticate(APIKeys.OutlookAcct, APIKeys.OutlookPW);
+                    smtp.Send(message);
+                    smtp.Disconnect(true);
+                };
+
         }
+
+     
 
     }
 }
