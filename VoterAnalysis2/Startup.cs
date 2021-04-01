@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VoterAnalysis2.Data;
+using VoterAnalysis2.Hubs;
 
 namespace VoterAnalysis2
 {
@@ -36,6 +37,7 @@ namespace VoterAnalysis2
                 .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddTransient<GoogleMapsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

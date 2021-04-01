@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VoterAnalysis2.Data;
 
 namespace VoterAnalysis2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210331192419_addedfieldsvoter")]
+    partial class addedfieldsvoter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace VoterAnalysis2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4631b30e-2c8e-4c08-a307-b59dbe99dae0",
-                            ConcurrencyStamp = "247a6320-4920-4fe4-9837-cb05c7ef0470",
+                            Id = "a1dec4c0-a0c3-4c1d-9282-5d9b458a8811",
+                            ConcurrencyStamp = "21fab60a-0901-445b-99b9-7fbc1d0b9caa",
                             Name = "Campaign Manager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "292a5fc1-e805-4559-8581-f0b15f8e31d5",
-                            ConcurrencyStamp = "0b8d0b09-c8d1-4e76-9628-d702f6da994a",
+                            Id = "20b89416-d8ea-4167-ae10-d446008f6b8f",
+                            ConcurrencyStamp = "41939fe3-bcdf-4e04-8a23-ef19403f5c7c",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "d6874865-3c2f-48ce-85ec-aa0c7a2b7206",
-                            ConcurrencyStamp = "4d120195-69e2-4f51-a056-8b823bcb90b1",
+                            Id = "e1503396-c05c-4f2b-bbb3-c8e5993d96f9",
+                            ConcurrencyStamp = "5eb08231-03e4-4f91-a23d-767f9dc270e0",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
@@ -422,11 +424,11 @@ namespace VoterAnalysis2.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Latitude")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<string>("Longitude")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("PartyAffliation")
                         .HasColumnType("nvarchar(max)");

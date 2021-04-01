@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "SeeVotersMap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>SeeVoterMap</h1>
+
+
+
+<div id="map" style="width: 800px; height: 800px;"></div>
+<script>
+    var map;
+    function initMap()
+    {
+        var locations = @ViewBag.voters;
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: new google.maps.LatLng(40.3698, -80.6340),
+
+        });
+        for (i = 0; locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i].Latitude, locations[i].Longitude),
+                map: map
+            });
+        }
+    }
+   
+</script>
+
+<script 
+        src="https://maps.googleapis.com/maps/api/js?key=@(APIKeys.GoogleMapsAPI)&callback=initMap"
+    async defer></script>
+
+    

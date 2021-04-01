@@ -37,5 +37,7 @@ namespace VoterAnalysis2.Models
 		public string General2018 { get; set; }
 		public string Primary2020 { get; set; }
 		public string General2020 { get; set; }
+		public string Latitude { get; set; }
+		public string Longitude { get; set; }
 	}
 }

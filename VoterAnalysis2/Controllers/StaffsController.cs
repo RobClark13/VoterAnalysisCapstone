@@ -5,10 +5,12 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MailKit.Security;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
+using Newtonsoft.Json;
 using VoterAnalysis2.Data;
 using VoterAnalysis2.Models;
 
@@ -192,7 +194,7 @@ namespace VoterAnalysis2.Controllers
             return View(voter);
         }
        public void SendEmail()
-        {
+       {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Joey", APIKeys.OutlookAcct));
             message.To.Add(new MailboxAddress("Alice", "clarkrob13@gmail.com"));
@@ -216,9 +218,18 @@ namespace VoterAnalysis2.Controllers
                     smtp.Authenticate(APIKeys.OutlookAcct, APIKeys.OutlookPW);
                     smtp.Send(message);
                     smtp.Disconnect(true);
-                };
+            };
 
+       }
+        public ActionResult SeeVotersMap()
+        {
+            var votersContactedID = _context.VoterIds.Select(v=>v.VoterId);
+            var votersContactedStance = _context.VoterStances.Select(v => v.VoterId);
+            var voters = _context.Voters.Where(v => !votersContactedID.Contains(v.Id)||!votersContactedStance.Contains(v.Id));
+            ViewBag.voters = new HtmlString(JsonConvert.SerializeObject(voters));
+            return View(voters);
         }
+       
 
      
 

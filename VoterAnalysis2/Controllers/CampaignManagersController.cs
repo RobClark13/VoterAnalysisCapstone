@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using VoterAnalysis2.Data;
+using VoterAnalysis2.Hubs;
 using VoterAnalysis2.Models;
 
 namespace VoterAnalysis2.Controllers
@@ -16,10 +17,12 @@ namespace VoterAnalysis2.Controllers
     public class CampaignManagersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly GoogleMapsService _googleMapsService;
 
-        public CampaignManagersController(ApplicationDbContext context)
+        public CampaignManagersController(ApplicationDbContext context, GoogleMapsService googleMapsService)
         {
             _context = context;
+            _googleMapsService = googleMapsService;
         }
 
         // GET: CampaignManagers
@@ -205,6 +208,18 @@ namespace VoterAnalysis2.Controllers
             }
             await _context.SaveChangesAsync();
             return View("Index");
+        }
+        
+        public async void GeocodeVoters()
+        {
+            var voters = _context.Voters.Where(v => v.LastName == "ABBOTT");
+            foreach (Voter voter in voters)
+            {
+                await _googleMapsService.GeocodeVoterAddress(voter);
+                
+            }
+            await _context.SaveChangesAsync();
+           
         }
         public ActionResult ViewListOfStaff()
         {
