@@ -10,8 +10,8 @@ using VoterAnalysis2.Data;
 namespace VoterAnalysis2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210401150907_readdvoterfks")]
-    partial class readdvoterfks
+    [Migration("20210401184818_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace VoterAnalysis2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4631b30e-2c8e-4c08-a307-b59dbe99dae0",
-                            ConcurrencyStamp = "247a6320-4920-4fe4-9837-cb05c7ef0470",
+                            Id = "440c7713-3e9d-4e0e-a096-fb1761f8e972",
+                            ConcurrencyStamp = "085d973d-9854-466d-9c94-6a3e3104eecb",
                             Name = "Campaign Manager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "292a5fc1-e805-4559-8581-f0b15f8e31d5",
-                            ConcurrencyStamp = "0b8d0b09-c8d1-4e76-9628-d702f6da994a",
+                            Id = "f0a8c597-223a-48e8-9913-1477ceaf3366",
+                            ConcurrencyStamp = "337423cb-ef95-4cdb-ab8b-ee4b983dbf0b",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "d6874865-3c2f-48ce-85ec-aa0c7a2b7206",
-                            ConcurrencyStamp = "4d120195-69e2-4f51-a056-8b823bcb90b1",
+                            Id = "364dfe5e-bdf9-48cd-8bfc-6468e41948b7",
+                            ConcurrencyStamp = "276f8bd6-4cb4-4bdf-8f3b-664496adca21",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
@@ -282,7 +282,7 @@ namespace VoterAnalysis2.Migrations
                     b.Property<string>("Precinct")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StaffId")
+                    b.Property<int>("StaffId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -330,10 +330,12 @@ namespace VoterAnalysis2.Migrations
                     b.Property<string>("Precinct")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StaffId");
 
                     b.ToTable("PrecinctsAssigned");
                 });
@@ -655,9 +657,11 @@ namespace VoterAnalysis2.Migrations
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayAssignment", b =>
                 {
-                    b.HasOne("VoterAnalysis2.Models.Voter", "Staff")
+                    b.HasOne("VoterAnalysis2.Models.Staff", "Staff")
                         .WithMany()
-                        .HasForeignKey("StaffId");
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayVote", b =>
@@ -669,6 +673,15 @@ namespace VoterAnalysis2.Migrations
                     b.HasOne("VoterAnalysis2.Models.Voter", "Voter")
                         .WithMany()
                         .HasForeignKey("VoterId");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.PrecinctAssigned", b =>
+                {
+                    b.HasOne("VoterAnalysis2.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.Staff", b =>

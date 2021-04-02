@@ -18,8 +18,7 @@ namespace VoterAnalysis2.Data
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<PrecinctAssigned> PrecinctsAssigned { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
-       
-        public DbSet<Voter> Voters { get; set; }
+        public DbSet<Voter> Voters2 { get; set; }
         public DbSet<VoterIdSurvey> VoterIds { get; set; }
         public DbSet<VoterScore> VoterScores { get; set; }
         public DbSet<VoterStanceSurvey> VoterStances { get; set; }

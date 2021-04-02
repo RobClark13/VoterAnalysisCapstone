@@ -13,15 +13,18 @@
     <div class="col-md-4">
         <form asp-action="AssignStaffPrecinct">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Precinct" class="control-label"></label>
-                <input asp-for="Precinct" class="form-control" />
-                <span asp-validation-for="Precinct" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ElectionDay" /> @Html.DisplayNameFor(model => model.ElectionDay)
+                </label>
             </div>
             <div class="form-group">
-                <label asp-for="StaffName" class="control-label"></label>
-                <input asp-for="StaffName" class="form-control" />
-                <span asp-validation-for="StaffName" class="text-danger"></span>
+                <label asp-for="Precinct" class="control-label"></label>
+                <select asp-for="Precinct" class="form-control" asp-items="ViewBag.Precinct"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaffId" class="control-label"></label>
+                <select asp-for="StaffId" class="form-control" asp-items="ViewBag.StaffId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -48,22 +48,22 @@ namespace VoterAnalysis2.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4631b30e-2c8e-4c08-a307-b59dbe99dae0",
-                            ConcurrencyStamp = "247a6320-4920-4fe4-9837-cb05c7ef0470",
+                            Id = "94e3d9a5-474f-409d-8a4e-49d413c5606f",
+                            ConcurrencyStamp = "65d126b6-41a9-49bd-9392-462f10d0abed",
                             Name = "Campaign Manager",
                             NormalizedName = "CAMPAIGNMANAGER"
                         },
                         new
                         {
-                            Id = "292a5fc1-e805-4559-8581-f0b15f8e31d5",
-                            ConcurrencyStamp = "0b8d0b09-c8d1-4e76-9628-d702f6da994a",
+                            Id = "063108f1-8e0d-44f5-9a18-4391700d287b",
+                            ConcurrencyStamp = "af34a564-f3bc-4bfe-ae23-eb320743f978",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "d6874865-3c2f-48ce-85ec-aa0c7a2b7206",
-                            ConcurrencyStamp = "4d120195-69e2-4f51-a056-8b823bcb90b1",
+                            Id = "fdfe4054-4348-4465-b254-e1fd042f5fbd",
+                            ConcurrencyStamp = "a78a27de-6b91-4523-9aed-95d217d7d47f",
                             Name = "Volunteer",
                             NormalizedName = "VOLUNTEER"
                         });
@@ -280,7 +280,7 @@ namespace VoterAnalysis2.Migrations
                     b.Property<string>("Precinct")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StaffId")
+                    b.Property<int>("StaffId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -328,10 +328,12 @@ namespace VoterAnalysis2.Migrations
                     b.Property<string>("Precinct")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StaffId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StaffId");
 
                     b.ToTable("PrecinctsAssigned");
                 });
@@ -481,7 +483,7 @@ namespace VoterAnalysis2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Voters");
+                    b.ToTable("Voters2");
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.VoterIdSurvey", b =>
@@ -653,9 +655,11 @@ namespace VoterAnalysis2.Migrations
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayAssignment", b =>
                 {
-                    b.HasOne("VoterAnalysis2.Models.Voter", "Staff")
+                    b.HasOne("VoterAnalysis2.Models.Staff", "Staff")
                         .WithMany()
-                        .HasForeignKey("StaffId");
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.ElectionDayVote", b =>
@@ -667,6 +671,15 @@ namespace VoterAnalysis2.Migrations
                     b.HasOne("VoterAnalysis2.Models.Voter", "Voter")
                         .WithMany()
                         .HasForeignKey("VoterId");
+                });
+
+            modelBuilder.Entity("VoterAnalysis2.Models.PrecinctAssigned", b =>
+                {
+                    b.HasOne("VoterAnalysis2.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VoterAnalysis2.Models.Staff", b =>

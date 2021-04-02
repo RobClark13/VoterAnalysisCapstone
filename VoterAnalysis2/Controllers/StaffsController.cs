@@ -171,7 +171,7 @@ namespace VoterAnalysis2.Controllers
         public ActionResult SeeVotersFromPrecinct(int id)
         {
             var precinct = _context.PrecinctsAssigned.Find(id);
-            var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
+            var voters = _context.Voters2.Where(v => v.PrecinctName == precinct.Precinct);
             return View(voters);
         }
         public ActionResult SeeElectionDayAssigned()
@@ -182,7 +182,7 @@ namespace VoterAnalysis2.Controllers
         public ActionResult SeeVotersElectionDay(int id)
         {
             var precinct = _context.PrecinctsAssigned.Find(id);
-            var precinctvoters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
+            var precinctvoters = _context.Voters2.Where(v => v.PrecinctName == precinct.Precinct);
             var voters = _context.ElectionDayVotes.Where(v => v.HasVoted == false);
 
             return View(voters);
@@ -225,7 +225,7 @@ namespace VoterAnalysis2.Controllers
         {
             var votersContactedID = _context.VoterIds.Select(v=>v.VoterId);
             var votersContactedStance = _context.VoterStances.Select(v => v.VoterId);
-            var voters = _context.Voters.Where(v => !votersContactedID.Contains(v.Id)||!votersContactedStance.Contains(v.Id));
+            var voters = _context.Voters2.Where(v => !votersContactedID.Contains(v.Id)||!votersContactedStance.Contains(v.Id));
             ViewBag.voters = new HtmlString(JsonConvert.SerializeObject(voters));
             return View(voters);
         }

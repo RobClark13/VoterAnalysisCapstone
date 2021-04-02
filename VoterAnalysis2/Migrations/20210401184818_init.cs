@@ -47,20 +47,6 @@ namespace VoterAnalysis2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrecinctsAssigned",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Precinct = table.Column<string>(nullable: true),
-                    StaffName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PrecinctsAssigned", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Voters",
                 columns: table => new
                 {
@@ -91,7 +77,9 @@ namespace VoterAnalysis2.Migrations
                     Primary2018 = table.Column<string>(nullable: true),
                     General2018 = table.Column<string>(nullable: true),
                     Primary2020 = table.Column<string>(nullable: true),
-                    General2020 = table.Column<string>(nullable: true)
+                    General2020 = table.Column<string>(nullable: true),
+                    Latitude = table.Column<string>(nullable: true),
+                    Longitude = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -359,6 +347,48 @@ namespace VoterAnalysis2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ElectionDayAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ElectionDay = table.Column<bool>(nullable: false),
+                    Precinct = table.Column<string>(nullable: true),
+                    StaffId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ElectionDayAssignments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ElectionDayAssignments_Staffs_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staffs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PrecinctsAssigned",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ElectionDay = table.Column<bool>(nullable: false),
+                    Precinct = table.Column<string>(nullable: true),
+                    StaffId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PrecinctsAssigned", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PrecinctsAssigned_Staffs_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staffs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ElectionDayVotes",
                 columns: table => new
                 {
@@ -388,17 +418,17 @@ namespace VoterAnalysis2.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "519490d3-e5f4-4570-8853-8bde6672e68e", "b7806123-0943-4b2f-93d9-aa7d07db2854", "Campaign Manager", "CAMPAIGNMANAGER" });
+                values: new object[] { "440c7713-3e9d-4e0e-a096-fb1761f8e972", "085d973d-9854-466d-9c94-6a3e3104eecb", "Campaign Manager", "CAMPAIGNMANAGER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "900a60a3-4645-4f02-a9d0-3b66eb5843e2", "c7529fee-e4a7-4254-85eb-2eef1cb6919d", "Staff", "STAFF" });
+                values: new object[] { "f0a8c597-223a-48e8-9913-1477ceaf3366", "337423cb-ef95-4cdb-ab8b-ee4b983dbf0b", "Staff", "STAFF" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "204b61fb-9964-473d-ac24-dbc54f8c2d39", "ac98f07f-7cc7-49cd-92e6-ad16f7ad6a6b", "Volunteer", "VOLUNTEER" });
+                values: new object[] { "364dfe5e-bdf9-48cd-8bfc-6468e41948b7", "276f8bd6-4cb4-4bdf-8f3b-664496adca21", "Volunteer", "VOLUNTEER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -445,6 +475,11 @@ namespace VoterAnalysis2.Migrations
                 column: "IdentityUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ElectionDayAssignments_StaffId",
+                table: "ElectionDayAssignments",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ElectionDayVotes_VolunteerId",
                 table: "ElectionDayVotes",
                 column: "VolunteerId");
@@ -453,6 +488,11 @@ namespace VoterAnalysis2.Migrations
                 name: "IX_ElectionDayVotes_VoterId",
                 table: "ElectionDayVotes",
                 column: "VoterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PrecinctsAssigned_StaffId",
+                table: "PrecinctsAssigned",
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Staffs_IdentityUserID",
@@ -511,13 +551,13 @@ namespace VoterAnalysis2.Migrations
                 name: "CampaignManagers");
 
             migrationBuilder.DropTable(
+                name: "ElectionDayAssignments");
+
+            migrationBuilder.DropTable(
                 name: "ElectionDayVotes");
 
             migrationBuilder.DropTable(
                 name: "PrecinctsAssigned");
-
-            migrationBuilder.DropTable(
-                name: "Staffs");
 
             migrationBuilder.DropTable(
                 name: "VoterIds");
@@ -533,6 +573,9 @@ namespace VoterAnalysis2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Volunteers");
+
+            migrationBuilder.DropTable(
+                name: "Staffs");
 
             migrationBuilder.DropTable(
                 name: "Voters");

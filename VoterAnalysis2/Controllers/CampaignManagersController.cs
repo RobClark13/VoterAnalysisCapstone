@@ -172,7 +172,7 @@ namespace VoterAnalysis2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateVoterScore(VoterScore voterscore)
         {
-            var voters = _context.Voters.Where(v => v.ResidentialState == "OH");
+            var voters = _context.Voters2.Where(v => v.ResidentialState == "OH");
             foreach (Voter voter in voters)
             {
                 if (ModelState.IsValid)
@@ -212,7 +212,7 @@ namespace VoterAnalysis2.Controllers
         
         public async void GeocodeVoters()
         {
-            var voters = _context.Voters.Where(v => v.LastName == "ABBOTT");
+            var voters = _context.Voters2.Where(v => v.LastName == "ABBOTT");
             foreach (Voter voter in voters)
             {
                 await _googleMapsService.GeocodeVoterAddress(voter);
@@ -226,22 +226,23 @@ namespace VoterAnalysis2.Controllers
            var staffList= _context.Staffs;
             return View(staffList);
         }
-        public IActionResult AssignStaffPrecinct()
+        public IActionResult AssignStaffPrecinct(int id)
         {
-            ViewBag.Precinct = new SelectList(_context.Voters, "PrecinctName", "PrecinctName");
             
+            ViewBag.Precinct = new SelectList(_context.Voters2, "PrecinctName", "PrecinctName");
              return View();
         }
         [HttpPost]
         public async Task<IActionResult> AssignStaffPrecinct(PrecinctAssigned precinctAssigned)
         {
-                _context.Add(precinctAssigned);
+                
+            _context.Add(precinctAssigned);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
         }
         public IActionResult AssignStaffElectionDay()
         {
-            ViewBag.Precinct = new SelectList(_context.Voters, "PrecinctName", "PrecinctName");
+            ViewBag.Precinct = new SelectList(_context.Voters2, "PrecinctName", "PrecinctName");
             return View();
         }
         [HttpPost]
@@ -256,7 +257,7 @@ namespace VoterAnalysis2.Controllers
             var xlabels = new List<string>();
             var ylabels = new List<int>();
             var likelyvoters = from v in _context.VoterScores
-                               join d in _context.Voters on v.VoterId equals d.Id
+                               join d in _context.Voters2 on v.VoterId equals d.Id
                                select new
                                {
                                    VoterScore = v.Score,
