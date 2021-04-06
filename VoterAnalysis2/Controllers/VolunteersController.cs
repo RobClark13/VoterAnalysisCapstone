@@ -167,21 +167,17 @@ namespace VoterAnalysis2.Controllers
             var voters = _context.Voters.OrderBy(v=>v.LastName);
             return View(voters);
         }
-        public async Task<IActionResult> CheckOffVoter(int id, ElectionDayVote electionDayVote)
+        public ActionResult CheckOffVoter(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var vol = _context.Volunteers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var voter = _context.Voters.Where(v => v.Id == id).FirstOrDefault();
-            if (ModelState.IsValid)
-
-            {
-                electionDayVote.HasVoted = true;
-               
-                electionDayVote.VoterId = voter.Id;
-                  _context.Add(electionDayVote);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
+            var voter = _context.ElectionDayVotes.Where(s => s.VoterId == id).SingleOrDefault();
+            return View(voter);
+        }
+        [HttpPost]
+        public ActionResult CheckOffVoter(ElectionDayVote electionDayVote)
+        {
+            _context.ElectionDayVotes.Update(electionDayVote);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
