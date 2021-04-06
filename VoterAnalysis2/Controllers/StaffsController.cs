@@ -198,17 +198,14 @@ namespace VoterAnalysis2.Controllers
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Joey", APIKeys.OutlookAcct));
             message.To.Add(new MailboxAddress("Alice", "clarkrob13@gmail.com"));
-            message.Subject = "How you doin?";
+            message.Subject = "Vote Today!";
             message.Body = new TextPart("plain")
             {
                 Text = @"Hey Alice,
 
-                What are you up to this weekend? Monica is throwing one of her parties on
-                Saturday and I was hoping you could make it.
+                Remember to vote today!
 
-                Will you be my +1?
-
-                -- Joey
+                -- Rob
                 "
             };
             using (var smtp = new MailKit.Net.Smtp.SmtpClient())
