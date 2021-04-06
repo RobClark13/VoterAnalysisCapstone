@@ -13,7 +13,7 @@ namespace VoterAnalysis2.Hubs
     {
         public string VoterGeocodingURL(Voter voter)
         {
-            return $"https://maps.googleapis.com/maps/api/geocode/json?address={voter.ResidentialAddress1}+{voter.ResidentialSecondaryAddr}+{voter.ResidentialCity}+{voter.ResidentialState}+{voter.ResidentialZip}+&key=" + APIKeys.GoogleMapsAPI;
+            return $"https://maps.googleapis.com/maps/api/geocode/json?address={voter.ResidentialAddress1}+{voter.ResidentialAddress2}+{voter.ResidentialCity}+{voter.ResidentialState}+{voter.ResidentialZip}+&key=" + APIKeys.GoogleMapsAPI;
         }
         public async Task<Voter> GeocodeVoterAddress(Voter voter)
         {

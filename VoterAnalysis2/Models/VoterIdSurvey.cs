@@ -11,20 +11,19 @@ namespace VoterAnalysis2.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime DateContacted { get; set; }
-        public string TypeOfContact { get; set; }
+        public string? DateContacted { get; set; }
+        public string? TypeOfContact { get; set; }
         public bool MadeContact { get; set; }
-        public int ContactScore { get; set; }
-        public int VoteIn2020 { get; set; }
-        public string PartyStance { get; set; }
-        public string DirectionOfCountry { get; set; }
-        public string DirectionOfSelf { get; set; }
+        public int? ContactScore { get; set; }
+        public string? VoteIn2020 { get; set; }
+        public string? PartyStance { get; set; }
+        public string? DirectionOfCountry { get; set; }
+        public string? DirectionOfSelf { get; set; }
+        public string? StaffName { get; set; }
         [ForeignKey("Voter")]
-        public int? VoterId { get; set; }
+        public int VoterId { get; set; }
         public Voter Voter { get; set; }
-        [ForeignKey("Staff")]
-        public int? StaffId { get; set; }
-        public Voter Staff { get; set; }
+       
 
     }
 }

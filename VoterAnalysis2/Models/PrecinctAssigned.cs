@@ -11,10 +11,7 @@ namespace VoterAnalysis2.Models
     {
         [Key]
         public int Id { get; set; }
-        public bool ElectionDay { get; set; }
         public string Precinct { get; set; }
-        [ForeignKey("Staff")]
-        public int StaffId { get; set; }
-        public Staff Staff { get; set; }
+       public string StaffName { get; set; }
     }
 }

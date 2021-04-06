@@ -17,7 +17,7 @@ namespace VoterAnalysis2.Models
         public string PhoneNumber { get; set; }
         public string EmailAddress { get; set; }
         [ForeignKey("IdentityUser")]
-        public string IdentityUserID { get; set; }
+        public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
     }
 }

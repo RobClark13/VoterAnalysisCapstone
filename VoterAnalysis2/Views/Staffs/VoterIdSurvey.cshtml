@@ -1,0 +1,79 @@
+﻿@model VoterAnalysis2.Models.VoterIdSurvey
+
+@{
+    ViewData["Title"] = "VoterIdSurvey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>VoterIdSurvey</h1>
+
+<h4>VoterIdSurvey</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="VoterIdSurvey">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="VoterId" />
+
+            <div class="form-group">
+                <label asp-for="DateContacted" class="control-label"></label>
+                <input asp-for="DateContacted" class="form-control" />
+                <span asp-validation-for="DateContacted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TypeOfContact" class="control-label"></label>
+                <select asp-for="TypeOfContact" class="form-control" asp-items="ViewBag.Contact"></select>
+                <span asp-validation-for="TypeOfContact" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="MadeContact" /> @Html.DisplayNameFor(model => model.MadeContact)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactScore" class="control-label"></label>
+                <input asp-for="ContactScore" class="form-control" />
+                <span asp-validation-for="ContactScore" class="text-danger"></span>
+            </div>
+            <p> Who did you vote for in 2020? Sophia Hunt, Clint Frazier, or someone else?</p>
+            <div class="form-group">
+                <label asp-for="VoteIn2020" class="control-label"></label>
+                <select asp-for="VoteIn2020" class="form-control" asp-items="ViewBag.Votein2020"></select>
+                <span asp-validation-for="VoteIn2020" class="text-danger"></span>
+            </div>
+            <p> Do you consider yourself part of the Apple Party, Pear Party, a third party, or and independent?</p>
+            <div class="form-group">
+                <label asp-for="PartyStance" class="control-label"></label>
+                <select asp-for="PartyStance" class="form-control" asp-items="ViewBag.Party"></select>
+                <span asp-validation-for="PartyStance" class="text-danger"></span>
+            </div>
+            <p>Do you think the generally the country is better or worse than four years ago?</p>
+            <div class="form-group">
+                <label asp-for="DirectionOfCountry" class="control-label"></label>
+                <select asp-for="DirectionOfCountry" class="form-control" asp-items="ViewBag.Country"></select>
+                <span asp-validation-for="DirectionOfCountry" class="text-danger"></span>
+            </div>
+            <p>Do you think you are better ore worse off than four years ago?</p>
+            <div class="form-group">
+                <label asp-for="DirectionOfSelf" class="control-label"></label>
+                <select asp-for="DirectionOfSelf" class="form-control" asp-items="ViewBag.Self"></select>
+                <span asp-validation-for="DirectionOfSelf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaffName" class="control-label"></label>
+                <input asp-for="StaffName" class="form-control" />
+                <span asp-validation-for="StaffName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

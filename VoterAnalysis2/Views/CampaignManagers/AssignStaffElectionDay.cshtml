@@ -1,17 +1,17 @@
-﻿@model VoterAnalysis2.Models.PrecinctAssigned
+﻿@model VoterAnalysis2.Models.ElectionDayAssignment
 
 @{
-    ViewData["Title"] = "AssignStaffPrecinct";
+    ViewData["Title"] = "AssignStaffElectionDay";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>AssignStaffPrecinct</h1>
+<h1>AssignStaffElectionDay</h1>
 
-<h4>PrecinctAssigned</h4>
+<h4>ElectionDayAssignment</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AssignStaffPrecinct">
+        <form asp-action="AssignStaffElectionDay">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Precinct" class="control-label"></label>

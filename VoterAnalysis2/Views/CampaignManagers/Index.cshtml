@@ -7,11 +7,58 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-    <a asp-action="CreateVoterScore">Create Voter Score</a>
-    <a asp-action="GeocodeVoters">Geocode Voters</a>
-    
-</p>
+
+
+<div class="card-deck">
+    <div class="card">
+        
+        <div class="card-body">
+            <h5 class="card-title">View List Of Staff</h5>
+            <p class="card-text">Assign Staff Precincts for Identifying Voters or Election Day</p>
+            <a asp-action="StartUp">View List</a>
+        </div>
+    </div>
+    <div class="card">
+        
+        <div class="card-body">
+            <h5 class="card-title">View Staff Contacts</h5>
+            <a asp-action="ViewStaffContacts">See Charts</a>
+        </div>
+    </div>
+    <div class="card">
+        
+        <div class="card-body">
+            <h5 class="card-title">View Likely Voters</h5>
+            <a asp-action="ViewLikelyVoters">See Chart</a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="card-deck">
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">View Voters Contacted by Day</h5>
+            <a asp-action="ViewVotersContactedByDay">See Chart</a>
+
+        </div>
+    </div>
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">Election Day Votes</h5>
+            <a asp-action="ViewVotersElectionDay">See Chart</a>
+        </div>
+    </div>
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">StartUp</h5>
+            <p class="card-text">These activities only have to happen once after voter data is inserted</p>
+            <a asp-action="StartUp">StartUp Activities</a>
+        </div>
+    </div>
+</div>
+
 
 

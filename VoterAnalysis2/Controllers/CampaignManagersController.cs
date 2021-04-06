@@ -28,8 +28,17 @@ namespace VoterAnalysis2.Controllers
         // GET: CampaignManagers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CampaignManagers.Include(c => c.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cm = _context.CampaignManagers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            if (cm == null)
+            {
+                RedirectToAction("Create");
+            }
+            return View();
+        }
+        public ActionResult StartUp()
+        {
+            return View();
         }
 
         // GET: CampaignManagers/Details/5
@@ -172,7 +181,7 @@ namespace VoterAnalysis2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateVoterScore(VoterScore voterscore)
         {
-            var voters = _context.Voters2.Where(v => v.ResidentialState == "OH");
+            var voters = _context.Voters.Where(v => v.ResidentialState == "OH");
             foreach (Voter voter in voters)
             {
                 if (ModelState.IsValid)
@@ -209,10 +218,44 @@ namespace VoterAnalysis2.Controllers
             await _context.SaveChangesAsync();
             return View("Index");
         }
+        public IActionResult CreateElectionDayList()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateElectionDayList(ElectionDayVote electionDayVote)
+        {
+            var voters = _context.Voters;
+            foreach (Voter voter in voters)
+            {
+                electionDayVote.VoterId = voter.Id;
+                _context.Add(electionDayVote);
+                electionDayVote = new ElectionDayVote();
+            }
+            await _context.SaveChangesAsync();
+            return View("Index");
+        }
+        public IActionResult CreateVoterIdSurveys()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateVoterIdSurveys(VoterIdSurvey voterIdSurvey)
+        {
+            var voters = _context.Voters;
+            foreach (Voter voter in voters)
+            {
+                voterIdSurvey.VoterId = voter.Id;
+                _context.Add(voterIdSurvey);
+                voterIdSurvey = new VoterIdSurvey();
+            }
+            await _context.SaveChangesAsync();
+            return View("Index");
+        }
         
         public async void GeocodeVoters()
         {
-            var voters = _context.Voters2.Where(v => v.LastName == "ABBOTT");
+            var voters = _context.Voters.Where(v => v.LastName == "ABBOTT");
             foreach (Voter voter in voters)
             {
                 await _googleMapsService.GeocodeVoterAddress(voter);
@@ -228,21 +271,54 @@ namespace VoterAnalysis2.Controllers
         }
         public IActionResult AssignStaffPrecinct(int id)
         {
-            
-            ViewBag.Precinct = new SelectList(_context.Voters2, "PrecinctName", "PrecinctName");
-             return View();
+            List<SelectListItem> precincts = new List<SelectListItem>()
+            {
+               new SelectListItem { Text = "STEUBENVILLE 1-1", Value = "PRECINCT STEUBENVILLE 1-1" },
+               new SelectListItem { Text = "STEUBENVILLE 1-2", Value = "PRECINCT STEUBENVILLE 1-2" },
+               new SelectListItem { Text = "STEUBENVILLE 2-1", Value = "PRECINCT STEUBENVILLE 2-1" },
+               new SelectListItem { Text = "STEUBENVILLE 2-2", Value = "PRECINCT STEUBENVILLE 2-2" },
+               new SelectListItem { Text = "STEUBENVILLE 3-1", Value = "PRECINCT STEUBENVILLE 3-1" },
+               new SelectListItem { Text = "STEUBENVILLE 3-2", Value = "PRECINCT STEUBENVILLE 3-2" },
+               new SelectListItem { Text = "STEUBENVILLE 4-1", Value = "PRECINCT STEUBENVILLE 4-1" },
+               new SelectListItem { Text = "STEUBENVILLE 4-2", Value = "PRECINCT STEUBENVILLE 4-2" },
+               new SelectListItem { Text = "STEUBENVILLE 5-1", Value = "PRECINCT STEUBENVILLE 5-1" },
+               new SelectListItem { Text = "STEUBENVILLE 5-2", Value = "PRECINCT STEUBENVILLE 5-2" },
+               new SelectListItem { Text = "STEUBENVILLE 5-3", Value = "PRECINCT STEUBENVILLE 5-3" },
+               new SelectListItem { Text = "STEUBENVILLE 6-1", Value = "PRECINCT STEUBENVILLE 6-1" },
+               new SelectListItem { Text = "STEUBENVILLE 6-2", Value = "PRECINCT STEUBENVILLE 6-2" },
+               new SelectListItem { Text = "STEUBENVILLE 6-3", Value = "PRECINCT STEUBENVILLE 6-3" },
+            };
+            ViewBag.precinct = precincts;
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> AssignStaffPrecinct(PrecinctAssigned precinctAssigned)
         {
                 
-            _context.Add(precinctAssigned);
+                _context.Add(precinctAssigned);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
         }
         public IActionResult AssignStaffElectionDay()
         {
-            ViewBag.Precinct = new SelectList(_context.Voters2, "PrecinctName", "PrecinctName");
+            List<SelectListItem> precincts= new List<SelectListItem>()
+            {
+               new SelectListItem { Text = "STEUBENVILLE 1-1", Value = "PRECINCT STEUBENVILLE 1-1" },
+               new SelectListItem { Text = "STEUBENVILLE 1-2", Value = "PRECINCT STEUBENVILLE 1-2" },
+               new SelectListItem { Text = "STEUBENVILLE 2-1", Value = "PRECINCT STEUBENVILLE 2-1" },
+               new SelectListItem { Text = "STEUBENVILLE 2-2", Value = "PRECINCT STEUBENVILLE 2-2" },
+               new SelectListItem { Text = "STEUBENVILLE 3-1", Value = "PRECINCT STEUBENVILLE 3-1" },
+               new SelectListItem { Text = "STEUBENVILLE 3-2", Value = "PRECINCT STEUBENVILLE 3-2" },
+               new SelectListItem { Text = "STEUBENVILLE 4-1", Value = "PRECINCT STEUBENVILLE 4-1" },
+               new SelectListItem { Text = "STEUBENVILLE 4-2", Value = "PRECINCT STEUBENVILLE 4-2" },
+               new SelectListItem { Text = "STEUBENVILLE 5-1", Value = "PRECINCT STEUBENVILLE 5-1" },
+               new SelectListItem { Text = "STEUBENVILLE 5-2", Value = "PRECINCT STEUBENVILLE 5-2" },
+               new SelectListItem { Text = "STEUBENVILLE 5-3", Value = "PRECINCT STEUBENVILLE 5-3" },
+               new SelectListItem { Text = "STEUBENVILLE 6-1", Value = "PRECINCT STEUBENVILLE 6-1" },
+               new SelectListItem { Text = "STEUBENVILLE 6-2", Value = "PRECINCT STEUBENVILLE 6-2" },
+               new SelectListItem { Text = "STEUBENVILLE 6-3", Value = "PRECINCT STEUBENVILLE 6-3" },
+            };
+            ViewBag.Precinct = precincts;
             return View();
         }
         [HttpPost]
@@ -257,7 +333,7 @@ namespace VoterAnalysis2.Controllers
             var xlabels = new List<string>();
             var ylabels = new List<int>();
             var likelyvoters = from v in _context.VoterScores
-                               join d in _context.Voters2 on v.VoterId equals d.Id
+                               join d in _context.Voters on v.VoterId equals d.Id
                                select new
                                {
                                    VoterScore = v.Score,
@@ -288,39 +364,24 @@ namespace VoterAnalysis2.Controllers
             var xlabels = new List<string>();
             var ylabels = new List<int>();
             var voterID = _context.VoterIds;
-            var voterStance = _context.VoterStances;
+          
             foreach (var data in voterID)
             {
                 if (data.MadeContact == true)
                 {
-                    if (xlabels.Contains(data.TypeOfContact))
+                    if (xlabels.Contains(data.DateContacted))
                     {
-                        int indexOfPrecinct = xlabels.IndexOf(data.TypeOfContact);
+                        int indexOfPrecinct = xlabels.IndexOf(data.DateContacted);
                         ylabels[indexOfPrecinct]++;
                     }
                     else
                     {
-                        xlabels.Add(data.TypeOfContact);
+                        xlabels.Add(data.DateContacted);
                         ylabels.Add(1);
                     }
                 }
             }
-            foreach (var data in voterStance)
-            {
-                if (data.MadeContact == true)
-                {
-                    if (xlabels.Contains(data.TypeOfContact))
-                    {
-                        int indexOfPrecinct = xlabels.IndexOf(data.TypeOfContact);
-                        ylabels[indexOfPrecinct]++;
-                    }
-                    else
-                    {
-                        xlabels.Add(data.TypeOfContact);
-                        ylabels.Add(1);
-                    }
-                }
-            }
+          
             ViewBag.xlabels = new HtmlString(JsonConvert.SerializeObject(xlabels));
             ViewBag.ylabels = new HtmlString(JsonConvert.SerializeObject(ylabels));
             return View();
@@ -342,17 +403,11 @@ namespace VoterAnalysis2.Controllers
             ViewBag.ylabel = new HtmlString(JsonConvert.SerializeObject(ylabel));
             return View();
         }
-        public ActionResult ViewStaffContact()
+        public ActionResult ViewStaffContacts()
         {
             var xlabels = new List<string>();
             var ylabels = new List<int>();
-            var staffContact = from v in _context.Staffs
-                               join d in _context.VoterIds on v.Id equals d.StaffId
-                               select new
-                               {
-                                   StaffName = v.FirstName + " " + v.LastName,
-                                   StaffContact = d.StaffId
-                               };
+            var staffContact = _context.VoterIds.Where(v => v.MadeContact == true);
             foreach (var data in staffContact)
             {
 
@@ -360,19 +415,18 @@ namespace VoterAnalysis2.Controllers
                 {
                     int indexOfPrecinct = xlabels.IndexOf(data.StaffName);
                     ylabels[indexOfPrecinct]++;
-
-                    {
+                }
+                else
+                {
                         xlabels.Add(data.StaffName);
                         ylabels.Add(1);
-                    }
-
-                }
-                
+                 }
             }
             ViewBag.xlabels = new HtmlString(JsonConvert.SerializeObject(xlabels));
             ViewBag.ylabels = new HtmlString(JsonConvert.SerializeObject(ylabels));
             return View();
         }
+        
     }
 }
 

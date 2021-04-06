@@ -11,51 +11,28 @@
     <a asp-action="Create">Create New</a>
     <a asp-action="SendEmail">Send Email</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdentityUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card-deck">
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">See Precincts Assigned</h5>
+            <p class="card-text">Assign Staff Precincts for Identifying Voters or Election Day</p>
+            <a asp-action="SeePrecinctsAssigned">View List</a>
+        </div>
+    </div>
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">See Election Day Assignment</h5>
+            <a asp-action="See">See Charts</a>
+        </div>
+    </div>
+    <div class="card">
+
+        <div class="card-body">
+            <h5 class="card-title">See Map of Uncontacted Voters</h5>
+            <a asp-action="SeeVotersMap">See Chart</a>
+        </div>
+    </div>
+</div>
+

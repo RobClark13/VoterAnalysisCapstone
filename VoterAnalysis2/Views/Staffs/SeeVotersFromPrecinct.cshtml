@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<VoterAnalysis2.Models.Voter>
 
 @{
-    ViewData["Title"] = "SeeVotersED";
+    ViewData["Title"] = "SeeVotersFromPrecinct";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>SeeVotersED</h1>
+<h1>SeeVotersFromPrecinct</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -26,9 +26,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Suffix)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
             
             <th>
                 @Html.DisplayNameFor(model => model.ResidentialAddress1)
@@ -45,10 +42,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.ResidentialZip)
             </th>
-            <
-            <th>
-                @Html.DisplayNameFor(model => model.PrecinctName)
-            </th>
+            
             
             <th></th>
         </tr>
@@ -69,10 +63,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Suffix)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            
+           
             <td>
                 @Html.DisplayFor(modelItem => item.ResidentialAddress1)
             </td>
@@ -90,11 +81,7 @@
             </td>
             
             <td>
-                @Html.DisplayFor(modelItem => item.PrecinctName)
-            </td>
-          
-            <td>
-                <a asp-action="CheckOffVoter" asp-route-id="@item.Id">CheckOffVoter</a> 
+                <a asp-action="VoterIdSurvey" asp-route-id="@item.Id">Voter Id Survey</a>
             </td>
         </tr>
 }

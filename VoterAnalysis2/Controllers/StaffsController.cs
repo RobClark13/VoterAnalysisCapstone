@@ -28,8 +28,13 @@ namespace VoterAnalysis2.Controllers
         // GET: Staffs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Staffs.Include(s => s.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var staff = _context.Staffs.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            if (staff == null)
+            {
+                RedirectToAction("Create");
+            }
+            return View();
         }
 
         // GET: Staffs/Details/5
@@ -71,7 +76,7 @@ namespace VoterAnalysis2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserId);
             return View(staff);
         }
 
@@ -88,7 +93,7 @@ namespace VoterAnalysis2.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserId);
             return View(staff);
         }
 
@@ -124,7 +129,7 @@ namespace VoterAnalysis2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserID);
+            ViewData["IdentityUserID"] = new SelectList(_context.Users, "Id", "Id", staff.IdentityUserId);
             return View(staff);
         }
 
@@ -171,7 +176,7 @@ namespace VoterAnalysis2.Controllers
         public ActionResult SeeVotersFromPrecinct(int id)
         {
             var precinct = _context.PrecinctsAssigned.Find(id);
-            var voters = _context.Voters2.Where(v => v.PrecinctName == precinct.Precinct);
+            var voters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
             return View(voters);
         }
         public ActionResult SeeElectionDayAssigned()
@@ -182,17 +187,12 @@ namespace VoterAnalysis2.Controllers
         public ActionResult SeeVotersElectionDay(int id)
         {
             var precinct = _context.PrecinctsAssigned.Find(id);
-            var precinctvoters = _context.Voters2.Where(v => v.PrecinctName == precinct.Precinct);
+            var precinctvoters = _context.Voters.Where(v => v.PrecinctName == precinct.Precinct);
             var voters = _context.ElectionDayVotes.Where(v => v.HasVoted == false);
 
             return View(voters);
-
         }
-        public ActionResult VoterIdSurvey(int id)
-        {
-            var voter = _context.VoterScores.Where(v=>v.Score>=5);
-            return View(voter);
-        }
+       
        public void SendEmail()
        {
             var message = new MimeMessage();
@@ -223,11 +223,79 @@ namespace VoterAnalysis2.Controllers
        }
         public ActionResult SeeVotersMap()
         {
-            var votersContactedID = _context.VoterIds.Select(v=>v.VoterId);
-            var votersContactedStance = _context.VoterStances.Select(v => v.VoterId);
-            var voters = _context.Voters2.Where(v => !votersContactedID.Contains(v.Id)||!votersContactedStance.Contains(v.Id));
+            var votersContactedID = _context.VoterIds.Where(v => v.MadeContact == false).Select(x => x.VoterId);
+            var voters = _context.Voters.Where(v => votersContactedID.Contains(v.Id));
             ViewBag.voters = new HtmlString(JsonConvert.SerializeObject(voters));
             return View(voters);
+        }
+        public ActionResult VoterIdSurvey(int id)
+        {
+            List<SelectListItem> TypeOfContact = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "In-Person", Value = "In-Person" },
+                new SelectListItem { Text = "Phone", Value = "Phone" },
+            };
+            List<SelectListItem> VoteIn2020 = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Sophia Hunt", Value = "Sophia Brady" },
+                new SelectListItem { Text = "Clint Frazier", Value = "Clint Frazier" },
+                new SelectListItem { Text = "Other", Value = "Other" },
+                new SelectListItem { Text = "Didn't Vote", Value = "Didn't Vote" },
+
+            };
+            List<SelectListItem> PartyStance = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Apple Party", Value = "Apple Party" },
+                new SelectListItem { Text = "Pear Party", Value = "Pear Party" },
+                new SelectListItem { Text = "Third Party", Value = "Third Party" },
+                new SelectListItem { Text = "Independent", Value = "Independent" },
+
+            };
+            List<SelectListItem> DirectionOfCountry = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Good", Value = "Good" },
+                new SelectListItem { Text = "Bad", Value = "Bad" },
+                new SelectListItem { Text = "Same", Value = "Same" },
+            };
+            List<SelectListItem> DirectionOfSelf = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Good", Value = "Good" },
+                new SelectListItem { Text = "Bad", Value = "Bad" },
+                new SelectListItem { Text = "Same", Value = "Same" },
+            };
+            var survey=_context.VoterIds.Where(s=>s.VoterId==id).SingleOrDefault();
+            ViewBag.Contact = TypeOfContact;
+            ViewBag.VoteIn2020 = VoteIn2020;
+            ViewBag.Party = PartyStance;
+            ViewBag.Country = DirectionOfCountry;
+            ViewBag.Self = DirectionOfSelf;
+            return View(survey);
+        }
+        [HttpPost]
+        public ActionResult VoterIdSurvey(VoterIdSurvey voterIdSurvey)
+        {
+           
+            
+            _context.VoterIds.Update(voterIdSurvey);
+            if (voterIdSurvey.VoteIn2020 == "Sophia Brady") 
+            {
+                voterIdSurvey.ContactScore += 1;
+            }
+            if (voterIdSurvey.DirectionOfCountry == "Good")
+            {
+                voterIdSurvey.ContactScore += 1;
+            }
+            if (voterIdSurvey.DirectionOfSelf == "Good")
+            {
+                voterIdSurvey.ContactScore += 1;
+            }
+            if (voterIdSurvey.PartyStance == "Apple Party")
+            {
+                voterIdSurvey.ContactScore += 1;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
        
 

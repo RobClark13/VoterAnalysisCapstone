@@ -23,8 +23,13 @@ namespace VoterAnalysis2.Controllers
         // GET: Volunteers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Volunteers.Include(v => v.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var vol = _context.CampaignManagers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            if (vol == null)
+            {
+                RedirectToAction("Create");
+            }
+            return View(vol);
         }
 
         // GET: Volunteers/Details/5
@@ -159,14 +164,14 @@ namespace VoterAnalysis2.Controllers
         }
         public IActionResult SeeVotersED()
         {
-            var voters = _context.Voters2.OrderBy(v=>v.LastName);
+            var voters = _context.Voters.OrderBy(v=>v.LastName);
             return View(voters);
         }
         public async Task<IActionResult> CheckOffVoter(int id, ElectionDayVote electionDayVote)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var vol = _context.Volunteers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var voter = _context.Voters2.Where(v => v.Id == id).FirstOrDefault();
+            var voter = _context.Voters.Where(v => v.Id == id).FirstOrDefault();
             if (ModelState.IsValid)
 
             {

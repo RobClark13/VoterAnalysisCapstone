@@ -15,9 +15,5 @@ namespace VoterAnalysis2.Models
         [ForeignKey("Voter")]
         public int? VoterId { get; set; }
         public Voter Voter { get; set; }
-        [ForeignKey("Volunteer")]
-        public int? VolunteerId { get; set; }
-        public Volunteer volunteer { get; set; }
-
     }
 }
