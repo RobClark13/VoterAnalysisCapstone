@@ -164,7 +164,7 @@ namespace VoterAnalysis2.Controllers
         }
         public IActionResult SeeVotersED()
         {
-            var voters = _context.Voters.OrderBy(v=>v.LastName);
+            var voters = _context.Voters.Where(v=>v.PrecinctName== "PRECINCT STEUBENVILLE 5-1").OrderBy(v=>v.LastName);
             return View(voters);
         }
         public ActionResult CheckOffVoter(int id)

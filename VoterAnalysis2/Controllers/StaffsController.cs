@@ -260,7 +260,7 @@ namespace VoterAnalysis2.Controllers
                 new SelectListItem { Text = "Bad", Value = "Bad" },
                 new SelectListItem { Text = "Same", Value = "Same" },
             };
-            var survey=_context.VoterIds.Where(s=>s.VoterId==id).SingleOrDefault();
+            var survey=_context.VoterIds.Where(s=>s.VoterId==id).FirstOrDefault();
             ViewBag.Contact = TypeOfContact;
             ViewBag.VoteIn2020 = VoteIn2020;
             ViewBag.Party = PartyStance;
